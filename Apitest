@@ -1,0 +1,44 @@
+import UIKit
+
+class ViewController: UIViewController {
+
+    @IBOutlet weak var resultTextView: UITextView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    // Function to fetch and display JSON data from the given API URL
+    func fetchData(apiUrl: String) {
+        if let url = URL(string: apiUrl) {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                } else if let data = data {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: [])
+                        DispatchQueue.main.async {
+                            self.resultTextView.text = "\(json)"
+                        }
+                    } catch {
+                        print("JSON parsing error: \(error.localizedDescription)")
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    // IBActions for buttons
+    @IBAction func fetchApi1(_ sender: UIButton) {
+        fetchData(apiUrl: "https://random-d.uk/api")
+    }
+    
+    @IBAction func fetchApi2(_ sender: UIButton) {
+        fetchData(apiUrl: "https://dukengn.github.io/Dog-facts-API/")
+    }
+    
+    @IBAction func fetchApi3(_ sender: UIButton) {
+        fetchData(apiUrl: "https://alexwohlbruck.github.io/cat-facts/")
+    }
+}
